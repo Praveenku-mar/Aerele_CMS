@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-25 14:14:53.485276",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "mentee_details_section",
+  "mentee_id",
+  "name1",
+  "phone_number",
+  "email",
+  "mentor_id"
+ ],
+ "fields": [
+  {
+   "fieldname": "mentee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Mentee Details"
+  },
+  {
+   "fieldname": "mentee_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mentee ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1
+  },
+  {
+   "default": "+91",
+   "fieldname": "phone_number",
+   "fieldtype": "Phone",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "User",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "mentor_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Mentor ID",
+   "options": "Mentor",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-25 14:17:07.802612",
+ "modified_by": "Administrator",
+ "module": "cms",
+ "name": "Mentee",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
