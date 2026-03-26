@@ -29,7 +29,7 @@
   },
   {
    "fieldname": "phone_number",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Phone Number"
   },
   {
@@ -43,7 +43,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-25 14:12:41.467186",
+ "modified": "2026-03-26 11:50:43.082354",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Mentor",

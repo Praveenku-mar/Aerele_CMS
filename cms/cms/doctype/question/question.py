@@ -9,9 +9,9 @@ class Question(Document):
 	pass
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_mentor():
-	frappe.log_error("11111")
+# 	frappe.log_error("11111")
 	users = frappe.get_all("User", fields=["name"])
 	mentors = []
 
@@ -19,5 +19,7 @@ def get_mentor():
 		roles = frappe.get_roles(u["name"])
 		if "Mentor" in roles:
 			mentors.append(u["name"])
+
+	frappe.log_error("mentor list",mentors)
 
 	return mentors

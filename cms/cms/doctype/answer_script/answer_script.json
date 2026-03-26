@@ -1,70 +1,76 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-03-25 13:58:54.990761",
+ "creation": "2026-03-26 11:45:12.167745",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_x6ym",
+  "section_break_qeg1",
   "amended_from",
-  "question",
-  "answer",
-  "approver",
-  "approval_status"
+  "mentee_id",
+  "exam_start_time",
+  "exam_end_time",
+  "questions_section",
+  "questions"
  ],
  "fields": [
   {
-   "fieldname": "section_break_x6ym",
+   "fieldname": "section_break_qeg1",
    "fieldtype": "Section Break",
-   "label": "Question Details"
+   "label": "Mentee Details"
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Question",
+   "options": "Answer Script",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
   },
   {
-   "fieldname": "question",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Question",
-   "reqd": 1
-  },
-  {
-   "fieldname": "answer",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Answer",
-   "reqd": 1
-  },
-  {
-   "fieldname": "approver",
+   "fieldname": "mentee_id",
    "fieldtype": "Link",
-   "label": "Approver",
-   "options": "User",
+   "in_list_view": 1,
+   "label": "Mentee ID",
+   "options": "Mentee",
    "reqd": 1
   },
   {
-   "default": "Submitted",
-   "fieldname": "approval_status",
-   "fieldtype": "Select",
-   "label": "Approval Status",
-   "options": "Submitted\nVerified\nApproved\nRejected"
+   "fieldname": "exam_start_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Exam Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "exam_end_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Exam End Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "questions_section",
+   "fieldtype": "Section Break",
+   "label": "Questions"
+  },
+  {
+   "fieldname": "questions",
+   "fieldtype": "Table",
+   "label": "Answer the below question",
+   "options": "Test Question"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 11:44:42.956052",
+ "modified": "2026-03-26 13:59:14.445229",
  "modified_by": "Administrator",
  "module": "cms",
- "name": "Question",
+ "name": "Answer Script",
  "owner": "Administrator",
  "permissions": [
   {
@@ -81,13 +87,24 @@
    "write": 1
   },
   {
-   "cancel": 1,
+   "create": 1,
+   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Mentor",
+   "role": "CTO",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Mentee",
    "share": 1,
    "submit": 1,
    "write": 1
@@ -100,7 +117,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "CTO",
+   "role": "Mentor",
    "share": 1,
    "write": 1
   }

@@ -117,9 +117,11 @@ app_license = "mit"
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+    "Mentee": "cms.cms.doctype.mentee.mentee.get_permission_query_conditions",
+    "Answer Script": "cms.cms.doctype.answer_script.answer_script.permission_query_condition",
+    "Answer" : "cms.cms.doctype.mentee.mentee.permission_query_conditions_mentor_see_mentees_answer_script"
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",

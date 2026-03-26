@@ -33,9 +33,8 @@
    "reqd": 1
   },
   {
-   "default": "+91",
    "fieldname": "phone_number",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Phone Number"
   },
   {
@@ -52,14 +51,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Mentor ID",
-   "options": "Mentor",
+   "options": "User",
    "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-25 14:17:07.802612",
+ "modified": "2026-03-26 13:06:30.329823",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Mentee",
@@ -74,6 +73,27 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Mentor",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "CTO",
    "share": 1,
    "write": 1
   }
