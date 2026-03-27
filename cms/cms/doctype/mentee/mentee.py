@@ -20,8 +20,6 @@ def get_permission_query_conditions(user):
 	if not user or user == "Administrator":
 		return ""
 
-	frappe.log_error("user",user)
-
 	# Check if logged-in user has Mentor role
 	if "Mentor" in frappe.get_roles(user):
 
@@ -35,18 +33,3 @@ def get_permission_query_conditions(user):
 
 	# return ""
 
-
-def permission_query_conditions_mentor_see_mentees_answer_script(user):
-    # If not a Mentor user → no restriction
-    if "Administrator":
-        return ""
-
-    return f"""
-        mentee IN (
-            SELECT name FROM `tabMentee`
-            WHERE mentor IN (
-                SELECT name FROM `tabMentor`
-                WHERE user = '{user}'
-            )
-        )
-    """

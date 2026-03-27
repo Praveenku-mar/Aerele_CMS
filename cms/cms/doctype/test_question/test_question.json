@@ -81,9 +81,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Question ID",
-   "link_filters": "[[\"Question\",\"approval_status\",\"=\",\"Approved\"]]",
+   "link_filters": "[]",
    "options": "Question",
-   "read_only": 1,
    "reqd": 1
   }
  ],
@@ -91,7 +90,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-26 15:47:25.511050",
+ "modified": "2026-03-27 16:58:58.764538",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Test Question",

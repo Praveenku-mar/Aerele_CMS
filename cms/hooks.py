@@ -119,8 +119,7 @@ app_license = "mit"
 
 permission_query_conditions = {
     "Mentee": "cms.cms.doctype.mentee.mentee.get_permission_query_conditions",
-    "Answer Script": "cms.cms.doctype.answer_script.answer_script.permission_query_condition",
-    "Answer" : "cms.cms.doctype.mentee.mentee.permission_query_conditions_mentor_see_mentees_answer_script"
+    "Daily Test": "cms.cms.doctype.answer_script.answer_script.permission_query_condition",
 }
 #
 # has_permission = {
@@ -248,4 +247,3 @@ permission_query_conditions = {
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

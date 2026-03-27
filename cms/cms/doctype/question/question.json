@@ -8,9 +8,7 @@
   "section_break_x6ym",
   "amended_from",
   "question",
-  "answer",
-  "approver",
-  "approval_status"
+  "answer"
  ],
  "fields": [
   {
@@ -41,27 +39,12 @@
    "in_list_view": 1,
    "label": "Answer",
    "reqd": 1
-  },
-  {
-   "fieldname": "approver",
-   "fieldtype": "Link",
-   "label": "Approver",
-   "options": "User",
-   "reqd": 1
-  },
-  {
-   "default": "Submitted",
-   "fieldname": "approval_status",
-   "fieldtype": "Select",
-   "label": "Approval Status",
-   "options": "Submitted\nVerified\nApproved\nRejected"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 11:44:42.956052",
+ "modified": "2026-03-27 16:53:59.368578",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Question",
@@ -77,11 +60,9 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
-   "cancel": 1,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -89,7 +70,6 @@
    "report": 1,
    "role": "Mentor",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
