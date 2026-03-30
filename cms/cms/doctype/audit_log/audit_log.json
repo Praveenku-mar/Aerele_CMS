@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-30 15:08:08.163338",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "audit_log_section",
+  "doctype_name",
+  "document_id",
+  "action",
+  "user",
+  "timestamp"
+ ],
+ "fields": [
+  {
+   "fieldname": "audit_log_section",
+   "fieldtype": "Section Break",
+   "label": "Audit Log"
+  },
+  {
+   "fieldname": "doctype_name",
+   "fieldtype": "Link",
+   "label": "DocType name",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "document_id",
+   "fieldtype": "Dynamic Link",
+   "label": "Document ID",
+   "options": "doctype_name"
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Data",
+   "label": "Action"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp",
+   "options": "now"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-30 15:12:24.697974",
+ "modified_by": "Administrator",
+ "module": "cms",
+ "name": "Audit Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -10,7 +10,8 @@
   "question",
   "answer",
   "module",
-  "concept"
+  "concept",
+  "status"
  ],
  "fields": [
   {
@@ -51,12 +52,19 @@
    "fieldname": "concept",
    "fieldtype": "Data",
    "label": "Concept"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nPending\nVerified\nApproved\nRejected"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-30 11:54:48.476717",
+ "modified": "2026-03-30 14:22:04.816613",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Question",

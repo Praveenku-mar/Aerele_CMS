@@ -138,14 +138,16 @@ permission_query_conditions = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"*": {
+        "validate":"cms.cms.api.create_audit_log",
+        "on_submit":"cms.cms.api.create_audit_log",
+		"on_cancel": "cms.cms.api.create_audit_log",
+	}
+}
 
+on_session_creation = "cms.cms.api.log_login"
+on_logout = "cms.cms.api.log_logout"
 # Scheduled Tasks
 # ---------------
 

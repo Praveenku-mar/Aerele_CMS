@@ -38,7 +38,6 @@ frappe.ui.form.on("Daily Test", {
                     }
                 );
             })
-        }
         frappe.call({
             method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
             args: { docname: frm.doc.name },
@@ -63,6 +62,7 @@ frappe.ui.form.on("Daily Test", {
             }
         });
     }
+}
 });
 
 function start_timer(frm, session_start) {

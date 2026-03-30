@@ -53,3 +53,39 @@ def call_llm_api(prompt: str):
         frappe.throw(f"AI returned incomplete result: {data}")
 
     return data
+
+
+def create_audit_log(doc,method):
+    if doc.doctype == "Audit Log":
+        return
+
+    doctype = ["Answer Script","Question","Daily Test","Mentee","Mentor","Request"]
+    if doc.doctype in doctype:
+        audit = frappe.new_doc("Audit Log")
+        audit.doctype_name = doc.doctype
+        audit.document_id = doc.name
+        audit.action = method
+        audit.user = frappe.session.user
+        audit.insert(ignore_permissions=True)
+
+
+def log_login(login_manager):
+    doc = frappe.get_last_doc("Activity Log")
+    frappe.get_doc({
+        "doctype": "Audit Log",
+        "doctype_name": "Activity Log",
+        "document_id": doc.name,
+        "action": "Login",
+        "user": frappe.session.user
+    }).insert(ignore_permissions=True)
+
+
+def log_logout(login_manager=None):
+    doc = frappe.get_last_doc("Activity Log")
+    frappe.get_doc({
+        "doctype": "Audit Log",
+        "doctype_name": "Activity Log",
+        "document_id": doc.name,
+        "action": "Logout",
+        "user": frappe.session.user
+    }).insert(ignore_permissions=True)
