@@ -13,6 +13,7 @@ class DailyTest(Document):
 	def on_submit(self):
 		self.validate_answer_with_ai()
 		self.calculate_total_mark()
+		
 
 	def calculate_total_mark(self):
 		total_marks = 0
@@ -75,3 +76,11 @@ def get_or_set_session_start(docname):
 		"status": "running",
 		"session_start_time": doc.session_start_time
 	}
+
+
+@frappe.whitelist()
+def check_all_answer(docname):
+    doc = frappe.get_doc("Daily Test", docname)
+    return [q.question_id for q in doc.questions if not q.answer]
+
+	

@@ -2,6 +2,44 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Daily Test", {
+        before_submit(frm) {
+
+        if (frappe.datetime.now_datetime() < frm.doc.exam_start_time) {
+            frappe.throw("You are not allowed to submit before the exam start time.");
+        }
+
+        if (frm._confirmed_submit) {
+            return;
+        }
+
+        frappe.call({
+            method:"cms.cms.doctype.daily_test.daily_test.check_all_answer",
+            args:{ docname: frm.doc.name },
+            callback: function(r){
+
+                if (!r.message || r.message.length === 0) {
+                    frm._confirmed_submit = true;
+                    frm.save("Submit");
+                    return false;
+                }
+
+                let msg = r.message.join(", ");
+
+                frappe.confirm(
+                    `Are you sure you want to submit without answering these questions: <b>${msg}</b>?`,
+                    () => {
+                        frm._confirmed_submit = true;
+                        frm.save("Submit");  
+                    },
+                    () => {
+                        return false;
+                    }
+                );
+            }
+        });
+
+        return false;
+    },
     onload(frm) {
         if (frappe.user.has_role("Mentee")){
             frm.add_custom_button(("Request"), () =>{

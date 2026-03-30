@@ -120,6 +120,7 @@ app_license = "mit"
 permission_query_conditions = {
     "Mentee": "cms.cms.doctype.mentee.mentee.get_permission_query_conditions",
     "Daily Test": "cms.cms.doctype.answer_script.answer_script.permission_query_condition",
+    "Performance Report":"cms.cms.doctype.performance_report.performance_report.performance_report_permission_query_conditions"
 }
 #
 # has_permission = {
@@ -151,23 +152,23 @@ on_logout = "cms.cms.api.log_logout"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"cms.tasks.all"
-# 	],
-# 	"daily": [
-# 		"cms.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"cms.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"cms.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"cms.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	# "all": [
+	# 	"cms.tasks.all"
+	# ],
+	"daily": [
+		"cms.task.daily"
+	],
+	# "hourly": [
+	# 	"cms.tasks.hourly"
+	# ],
+	"weekly": [
+		"cms.task.weekly"
+	],
+	"monthly": [
+		"cms.task.monthly"
+	],
+}
 
 # Testing
 # -------
