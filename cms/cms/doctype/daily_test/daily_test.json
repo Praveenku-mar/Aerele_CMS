@@ -9,10 +9,11 @@
   "mentee_id",
   "amended_from",
   "total_marks",
-  "session_time",
+  "session_start_time",
   "column_break_prxg",
   "exam_start_time",
   "exam_end_time",
+  "is_submited",
   "question_section",
   "questions"
  ],
@@ -77,18 +78,25 @@
    "read_only": 1
   },
   {
-   "fieldname": "session_time",
+   "fieldname": "session_start_time",
    "fieldtype": "Datetime",
    "hidden": 1,
-   "label": "Session TIme",
+   "label": "Session Start Time",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_submited",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "is_submited"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-27 20:36:08.456220",
+ "modified": "2026-03-30 13:10:49.596529",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",

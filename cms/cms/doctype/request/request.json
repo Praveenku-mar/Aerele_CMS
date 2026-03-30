@@ -1,65 +1,68 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-03-25 13:58:54.990761",
+ "autoname": "REQ-.###",
+ "creation": "2026-03-30 10:32:38.614850",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_x6ym",
+  "section_break_r0f5",
   "amended_from",
-  "question",
-  "answer",
-  "module",
-  "concept"
+  "mentee_id",
+  "exam_no",
+  "request_end_time",
+  "status"
  ],
  "fields": [
   {
-   "fieldname": "section_break_x6ym",
+   "fieldname": "section_break_r0f5",
    "fieldtype": "Section Break",
-   "label": "Question Details"
+   "label": "Exam Time Extend Request "
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Question",
+   "options": "Request",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
   },
   {
-   "fieldname": "question",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Question",
-   "reqd": 1
+   "fieldname": "mentee_id",
+   "fieldtype": "Link",
+   "label": "Mentee ID",
+   "options": "Mentee"
   },
   {
-   "fieldname": "answer",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Answer",
-   "reqd": 1
+   "fieldname": "exam_no",
+   "fieldtype": "Link",
+   "label": "Exam No",
+   "options": "Daily Test"
   },
   {
-   "fieldname": "module",
-   "fieldtype": "Data",
-   "label": "Module"
+   "fieldname": "request_end_time",
+   "fieldtype": "Datetime",
+   "label": "Request End Time"
   },
   {
-   "fieldname": "concept",
-   "fieldtype": "Data",
-   "label": "Concept"
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nPending\nVerified\nApproved\nRejected"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 11:54:48.476717",
+ "modified": "2026-03-30 11:37:48.333028",
  "modified_by": "Administrator",
  "module": "cms",
- "name": "Question",
+ "name": "Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -72,16 +75,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Mentor",
-   "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
@@ -92,9 +86,19 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "CTO",
+   "role": "Mentor",
    "share": 1,
+   "submit": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "role": "Mentee",
+   "share": 1
   }
  ],
  "row_format": "Dynamic",

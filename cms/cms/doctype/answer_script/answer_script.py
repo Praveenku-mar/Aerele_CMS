@@ -56,7 +56,7 @@ def permission_query_condition(user):
 	roles = frappe.get_roles(user)
 	if "Mentor" in roles:
 		return ""
-	# get mentee record for this logged-in user
+
 	mentee = frappe.db.get_value(
 		"Mentee", 
 		{"email": user}, 
@@ -64,9 +64,8 @@ def permission_query_condition(user):
 	)
 
 	if not mentee:
-		return "1=0"   # block everything
+		return "1=0"   
 
-	# mentee_id in Answer Script refers to Mentee.name
 	return f"`tabDaily Test`.mentee_id = '{mentee}'"
 
 
