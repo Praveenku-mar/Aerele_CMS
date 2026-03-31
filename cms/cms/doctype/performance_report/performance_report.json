@@ -23,8 +23,7 @@
    "fieldname": "mentee_id",
    "fieldtype": "Link",
    "label": "Mentee ID",
-   "options": "Mentee",
-   "read_only": 1
+   "options": "Mentee"
   },
   {
    "fieldname": "type",
@@ -61,7 +60,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-30 18:18:20.911945",
+ "modified": "2026-03-31 22:59:14.214873",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Performance Report",

@@ -120,7 +120,8 @@ app_license = "mit"
 permission_query_conditions = {
     "Mentee": "cms.cms.doctype.mentee.mentee.get_permission_query_conditions",
     "Daily Test": "cms.cms.doctype.answer_script.answer_script.permission_query_condition",
-    "Performance Report":"cms.cms.doctype.performance_report.performance_report.performance_report_permission_query_conditions"
+    "Performance Report":"cms.cms.doctype.performance_report.performance_report.performance_report_permission_query_conditions",
+	"AI Report":"cms.cms.doctype.ai_report.ai_report.ai_report_permission_query_condition"
 }
 #
 # has_permission = {
@@ -141,7 +142,7 @@ permission_query_conditions = {
 
 doc_events = {
 	"*": {
-        "validate":"cms.cms.api.create_audit_log",
+        "on_validate":"cms.cms.api.create_audit_log",
         "on_submit":"cms.cms.api.create_audit_log",
 		"on_cancel": "cms.cms.api.create_audit_log",
 	}

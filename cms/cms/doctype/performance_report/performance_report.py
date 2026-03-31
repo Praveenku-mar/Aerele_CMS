@@ -29,4 +29,4 @@ def performance_report_permission_query_conditions(user):
         if mentee_id:
             return f"`tabPerformance Report`.`mentee_id` = '{mentee_id}'"
 
-    return "1=2"
+    return "1=0"

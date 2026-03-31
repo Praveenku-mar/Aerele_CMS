@@ -41,16 +41,16 @@
    "label": "User"
   },
   {
+   "default": "now",
    "fieldname": "timestamp",
    "fieldtype": "Datetime",
-   "label": "Timestamp",
-   "options": "now"
+   "label": "Timestamp"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-30 15:12:24.697974",
+ "modified": "2026-03-31 10:41:41.000037",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Audit Log",

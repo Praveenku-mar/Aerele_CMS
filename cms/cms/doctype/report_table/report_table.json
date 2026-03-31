@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-31 21:49:46.601138",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "feedback_section",
+  "question_id",
+  "question",
+  "correct_answer",
+  "your_answer",
+  "ai_summary",
+  "ai_score"
+ ],
+ "fields": [
+  {
+   "fieldname": "feedback_section",
+   "fieldtype": "Section Break",
+   "label": "Feedback"
+  },
+  {
+   "fieldname": "question_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Question ID",
+   "options": "Question"
+  },
+  {
+   "fetch_from": "question_id.question",
+   "fieldname": "question",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Question"
+  },
+  {
+   "fetch_from": "question_id.answer",
+   "fieldname": "correct_answer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Correct Answer"
+  },
+  {
+   "fieldname": "your_answer",
+   "fieldtype": "Small Text",
+   "label": "Your Answer"
+  },
+  {
+   "fieldname": "ai_summary",
+   "fieldtype": "Small Text",
+   "label": "AI Summary "
+  },
+  {
+   "fieldname": "ai_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "AI Score"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-31 21:56:04.081757",
+ "modified_by": "Administrator",
+ "module": "cms",
+ "name": "Report Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

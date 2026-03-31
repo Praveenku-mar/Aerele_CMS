@@ -2,132 +2,109 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Daily Test", {
-        before_submit(frm) {
-
-        if (frappe.datetime.now_datetime() < frm.doc.exam_start_time) {
-            frappe.throw("You are not allowed to submit before the exam start time.");
+    refresh(frm){
+        if (frappe.user.has_role("Mentee")) {
+            add_request_button(frm);
         }
-
-        if (frm._confirmed_submit) {
-            return;
-        }
-
-        frappe.call({
-            method:"cms.cms.doctype.daily_test.daily_test.check_all_answer",
-            args:{ docname: frm.doc.name },
-            callback: function(r){
-
-                if (!r.message || r.message.length === 0) {
-                    frm._confirmed_submit = true;
-                    frm.save("Submit");
-                    return false;
-                }
-
-                let msg = r.message.join(", ");
-
-                frappe.confirm(
-                    `Are you sure you want to submit without answering these questions: <b>${msg}</b>?`,
-                    () => {
-                        frm._confirmed_submit = true;
-                        frm.save("Submit");  
-                    },
-                    () => {
-                        return false;
-                    }
-                );
-            }
-        });
-
-        return false;
     },
     onload(frm) {
-        if (frappe.user.has_role("Mentee")){
-            frm.add_custom_button(("Request"), () =>{
-                frappe.prompt(
-                    [
-                        {
-                            fieldname:"request_time",
-                            fieldtype:"Datetime",
-                            label:"Request Date Time",
-                            reqd:1
-                        }
-                    ],
-                    function(data){
-                        frappe.confirm(`Are you sure you want to extend exam time ${data.request_time} ?`,
-                            () => {
-                                frappe.call({
-                                    method:"cms.cms.doctype.request.request.request_time",
-                                    args:{
-                                        date:data.request_time,
-                                        exam_id : frm.doc.name,
-                                        mentee_id : frm.doc.mentee_id
-                                    },
-                                    callback: function(r){
-                                        if(!r.exc){
-                                            frape.msgprint({
-                                                title:"Success",
-                                                message:"Your request is submitted.",
-                                                indicator:"green"
-                                            });
-                                        }}
-                                })
-                            }
-                        );
-                    }
-                );
-            })
+        
+
         frappe.call({
             method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
             args: { docname: frm.doc.name },
             callback(r) {
                 let res = r.message;
+
+                setup_timer_box(frm);
+
                 if (res.status === "not_started") {
                     hide_questions(frm);
-                    setup_timer_box(frm)
-                    show_msg("⏳ Exam not started",frm);
+                    show_msg("⏳ Exam not started");
                     return;
                 }
 
                 if (res.status === "ended") {
-                    setup_timer_box(frm)
-                    show_msg("🔴 Exam ended",frm);
+                    show_msg("🔴 Exam ended");
                     return;
                 }
 
-                // Running state
+                show_questions(frm); 
                 let session_start = new Date(res.session_start_time);
-                start_timer(frm, session_start);
+                init_exam_timer(frm, session_start);
             }
         });
     }
-}
 });
+let exam_interval = null;
 
-function start_timer(frm, session_start) {
-    let timer_box = setup_timer_box(frm);
+function init_exam_timer(frm, session_start) {
+    if (exam_interval) clearInterval(exam_interval);
 
-    function tick() {
-        let now = new Date();
-        let elapsed = now - session_start;
-        let remaining = (60 * 60 * 1000) - elapsed;
+    update_timer(frm, session_start); 
 
-        if (remaining <= 0) {
-            frm.set_value("is_submited",1)
-            auto_submit(frm);
-        }
-
-        show_questions(frm);
-        timer_box.innerHTML = "🟢 Time left: <b>" + ms_to_time(remaining) + "</b>";
-    }
-    if (remaining != 0){
-    tick();
-    setInterval(tick, 1000);
-    }
+    exam_interval = setInterval(() => {
+        update_timer(frm, session_start);
+    }, 1000);
 }
 
+function update_timer(frm, session_start) {
+    if (frm.doc.docstatus == 1) {
+        show_msg("🔴 Exam ended");
+        clearInterval(exam_interval);
+        return;
+    }
+
+    let now = new Date();
+    let elapsed = now - session_start;
+    let remaining = (60 * 60 * 1000) - elapsed;
+
+    if (remaining <= 0) {
+        clearInterval(exam_interval);
+        frm.set_value("is_submited", 1);
+        auto_submit(frm);
+        return;
+    }
+    show_msg("🟢 Time left: <b>" + ms_to_time(remaining) + "</b>");
+}
 function auto_submit(frm) {
     frappe.msgprint("⏱ Time is over. Auto-submitting.");
     frm.save("Submit");
+}
+function add_request_button(frm) {
+    console.log("Custom button")
+    frm.add_custom_button(("Request"), () => {
+        frappe.prompt(
+            [{
+                fieldname: "request_time",
+                fieldtype: "Datetime",
+                label: "Request Date Time",
+                reqd: 1
+            }],
+            function (data) {
+                frappe.confirm(
+                    `Extend exam time to ${data.request_time}?`,
+                    () => {
+                        frappe.call({
+                            method: "cms.cms.doctype.request.request.request_time",
+                            args: {
+                                date: data.request_time,
+                                exam_id: frm.doc.name,
+                                mentee_id: frm.doc.mentee_id
+                            },
+                            callback() {
+                                frappe.msgprint({
+                                    title: "Success",
+                                    message: "Your request is submitted.",
+                                    indicator: "green"
+                                });
+                            }
+                        });
+                    }
+                );
+            }
+        );
+    });
 }
 
 function setup_timer_box(frm) {
@@ -141,7 +118,11 @@ function setup_timer_box(frm) {
             "padding:10px;background:#f5f5f5;border-radius:6px;font-size:16px;font-weight:bold;margin-bottom:12px;";
         frm.$wrapper.find(".form-dashboard").prepend(box);
     }
-    return box;
+}
+
+function show_msg(txt) {
+    let box = document.getElementById("exam_timer_box");
+    if (box) box.innerHTML = txt;
 }
 
 function hide_questions(frm) {
@@ -158,13 +139,7 @@ function show_questions(frm) {
     });
 }
 
-function show_msg(txt) {
-    let id = "exam_timer_box";
-    let box = document.getElementById(id);
-    box.innerHTML = txt
-}
-
 function ms_to_time(ms) {
     let s = Math.floor(ms / 1000);
-    return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m ${s%60}s`;
+    return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m ${s % 60}s`;
 }

@@ -3,16 +3,31 @@
 
 import frappe
 from frappe.model.document import Document
-from cms.cms.api import call_llm_api
+from frappe.utils import now_datetime, get_datetime
+import re
+from cms.cms.api import strip_html
 
 class DailyTest(Document):
 	def before_submit(self):
+		if now_datetime() < get_datetime(self.exam_start_time):
+			frappe.throw("You cannot submit the test before the exam start time.")
 		if self.is_submited != 1:
-			self.check_all_answer()
+			self.validate_all_answer()
+
 
 	def on_submit(self):
 		self.validate_answer_with_ai()
 		self.calculate_total_mark()
+
+	def validate_all_answer(self):
+		missing = []
+		for row in self.questions:
+			if not row.answer:
+				missing.append(row.question_id)
+		msg = ", ".join(missing)
+		if missing:
+			frappe.throw(f"Your are not answer for these following question {msg}.")
+
 		
 
 	def calculate_total_mark(self):
@@ -25,36 +40,29 @@ class DailyTest(Document):
 		self.total_marks = total_marks / count
 
 
-	def check_all_answer(self):
-		missing = []
-		for q in self.questions:
-			if not q.answer:
-				missing.append(q.question_id)
-		if missing:
-			msg = ", ".join(missing)
-			frappe.throw(f"The following questions are not answered: {msg}")
-
-
 	def validate_answer_with_ai(self):
+		batch = []
+
 		for row in self.questions:
-			prompt = f"""
-			Question: {row.question.strip()}
-			Correct Answer: {row.correct_answer}
-			Mentee's Answer: {row.answer}
+			mentee_answer = strip_html(row.answer)
+			batch.append({
+				"qustion_id": row.question_id,
+				"question": row.question,
+				"mentee_answer": mentee_answer,
+				"mentor_answer": row.correct_answer,
+				"concept": row.concept
+			})
 
-			Score this out of 10 and give JSON output:
-			{{"score": 7, "feedback": ""}}
-			"""
+		frappe.enqueue(
+			"cms.cms.api.evaluate_with_ai",
+			queue="long",
+			job_name=f"ai_eval_{self.name}",
+			parent=self.name,
+			data=batch,
+			mentee_id=self.mentee_id
+		)
 
-			response = call_llm_api(prompt)
-			frappe.db.set_value(row.doctype, row.name, {
-        		"ai_score": response.get("score"),
-        		"ai_feedback": response.get("feedback")
-    			})
-
-		self.reload()
-
-
+	
 
 @frappe.whitelist()
 def get_or_set_session_start(docname):
@@ -78,9 +86,5 @@ def get_or_set_session_start(docname):
 	}
 
 
-@frappe.whitelist()
-def check_all_answer(docname):
-    doc = frappe.get_doc("Daily Test", docname)
-    return [q.question_id for q in doc.questions if not q.answer]
-
+    
 	

@@ -14,6 +14,7 @@
   "exam_start_time",
   "exam_end_time",
   "is_submited",
+  "mentee_email",
   "question_section",
   "questions"
  ],
@@ -93,13 +94,21 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "is_submited"
+  },
+  {
+   "fetch_from": "mentee_id.email",
+   "fieldname": "mentee_email",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Mentee Email",
+   "options": "Email"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 15:36:39.296567",
+ "modified": "2026-03-31 13:46:36.833749",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",
