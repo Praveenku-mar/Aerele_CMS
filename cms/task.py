@@ -5,61 +5,6 @@ from datetime import datetime, timedelta
 from cms.cms.api import call_llm_api_daily
 
 
-# def daily():
-    
-#     mentees = frappe.get_all("Mentee", pluck="name")
-#     frappe.log_error("daily",mentees)
-#     now = datetime.now()
-#     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-#     end = start + timedelta(days=1)
-
-#     for mentee in mentees:
-#         frappe.log_error("start",start)
-#         frappe.log_error("now",now)
-
-#         questions = frappe.get_all(
-#             "Test Question",
-#             filters={
-#                 "parenttype": "Daily Test",
-#                 "parentfield": "questions",
-#                 "parent": ["in", frappe.get_all(
-#                     "Daily Test",
-#                     filters={
-#                         "mentee_id": mentee,
-#                         "docstatus": 1,
-#                         "creation": ["between", [start, end]]
-#                     },
-#                     pluck="name"
-#                 )]
-#             },
-#             fields=["question", "answer"]
-#         )
-#         frappe.log_error("question",questions)
-#         if not questions:
-#             continue
-
-#         qna_list = "\n".join(
-#             [f"Q: {row['question']}\nA: {row['answer']}" for row in questions]
-#         )
-
-#         prompt = (
-#             "Generate today's performance report for the mentee based on the following Q&A:\n\n"
-#             f"{qna_list}"
-#         )
-
-#         response = call_llm_api_daily(prompt)
-#         frappe.log_error("response",response)
-#         frappe.get_doc({
-#             "doctype": "Performance Report",
-#             "mentee_id": mentee,
-#             "type": "Daily",
-#             "summary": response.get("summary"),
-#             "strong_area": response.get("strengths"),
-#             "week_area": response.get("weaknesses"),
-#             "improvement": response.get("improvements"),
-#         }).insert(ignore_permissions=True)
-
-
 def generate_report(mentee, start, end, report_type):
     tests = frappe.get_all(
         "Daily Test",
@@ -70,7 +15,6 @@ def generate_report(mentee, start, end, report_type):
         },
         pluck="name"
     )
-
     if not tests:
         return
 
@@ -83,6 +27,7 @@ def generate_report(mentee, start, end, report_type):
         },
         fields=["question", "answer"]
     )
+
 
     if not questions:
         return
@@ -98,7 +43,7 @@ def generate_report(mentee, start, end, report_type):
     )
 
     response = call_llm_api_daily(prompt)
-
+    
     frappe.get_doc({
         "doctype": "Performance Report",
         "mentee_id": mentee,
@@ -113,8 +58,8 @@ def generate_report(mentee, start, end, report_type):
 def daily():
     mentees = frappe.get_all("Mentee", pluck="name")
     now = datetime.now()
-    start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    end = start + timedelta(days=1)
+    start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    end = now
 
     for mentee in mentees:
         generate_report(mentee, start, end, "Daily")

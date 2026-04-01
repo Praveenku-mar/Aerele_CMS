@@ -5,9 +5,28 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import now_datetime, get_datetime
 import re
-from cms.cms.api import strip_html
+from cms.cms.api import strip_html,send_telegram
 
 class DailyTest(Document):
+	def after_insert(self):
+		message = f"""
+			**New Test Available!
+			Test: {self.name}
+
+			Complete it within the allowed window!
+			Test Timing: {self.exam_start_time} to {self.exam_end_time}
+			Duration: 60 minutes
+
+			Instructions:
+			• Auto-submit when time ends
+			• Do not switch tabs repeatedly
+			• Start only when you’re ready
+
+			All the best!**
+		"""
+		send_telegram(self.chat_id,message)
+
+
 	def before_submit(self):
 		if now_datetime() < get_datetime(self.exam_start_time):
 			frappe.throw("You cannot submit the test before the exam start time.")
@@ -28,8 +47,6 @@ class DailyTest(Document):
 		if missing:
 			frappe.throw(f"Your are not answer for these following question {msg}.")
 
-		
-
 	def calculate_total_mark(self):
 		total_marks = 0
 		count = 0
@@ -46,7 +63,7 @@ class DailyTest(Document):
 		for row in self.questions:
 			mentee_answer = strip_html(row.answer)
 			batch.append({
-				"qustion_id": row.question_id,
+				"question_id": row.question_id,
 				"question": row.question,
 				"mentee_answer": mentee_answer,
 				"mentor_answer": row.correct_answer,

@@ -345,7 +345,7 @@ def evaluate_with_ai(parent, data,mentee_id):
 
         score = result["score"]
         feedback = result["Feedback"]
-        total += score
+        total += int(score)
         question.append({"question_id":question_id,"ai_summary":feedback,"ai_score":score,"your_answer":item['mentee_answer']})
     total = total / len(question)
     report = frappe.get_doc({
@@ -359,7 +359,16 @@ def evaluate_with_ai(parent, data,mentee_id):
 
 
 def strip_html(text):
-		clean = re.sub(r'<[^>]+>', '', text)
-		clean = clean.replace("&nbsp;", " ")
-		return clean.strip()
-    
+    if not text:
+        return ""
+    return re.sub(r"<[^>]+>", "", text)
+
+def send_telegram(chat_id, msg):
+    token = frappe.conf.telegram_bot_token
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    requests.post(url, json={
+    "chat_id": chat_id,
+    "text": msg,
+    "parse_mode": "Markdown"
+    })
+
