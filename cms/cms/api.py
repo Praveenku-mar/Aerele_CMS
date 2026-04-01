@@ -147,6 +147,7 @@ def call_llm_api_daily(prompt: str):
 
 
 def evaluate_with_ai(parent, data,mentee_id):
+    print("Function called")
     frappe.log_error("eval",parent)
     frappe.log_error("data",data)
 
@@ -343,18 +344,20 @@ def evaluate_with_ai(parent, data,mentee_id):
         if "score" not in result or "Feedback" not in result:
             frappe.throw(f"AI returned incomplete result:\n{result}")
 
-        score = result["score"]
+        score = result.get("score",0)
         feedback = result["Feedback"]
         total += int(score)
         question.append({"question_id":question_id,"ai_summary":feedback,"ai_score":score,"your_answer":item['mentee_answer']})
-    total = total / len(question)
+    final = total / len(question) 
     report = frappe.get_doc({
         'doctype':"AI Report",
         'mentee_id':mentee_id,
-        'exam_no':parent,
-        'total':total,
+        'exam_id':parent,
+        'total_score':total,
         'table_amwm':question
     }).insert(ignore_permissions=True)
+
+    return "OK"
     
 
 
@@ -364,6 +367,7 @@ def strip_html(text):
     return re.sub(r"<[^>]+>", "", text)
 
 def send_telegram(chat_id, msg):
+    frappe.log_error("send",chat_id)
     token = frappe.conf.telegram_bot_token
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     requests.post(url, json={
@@ -371,4 +375,5 @@ def send_telegram(chat_id, msg):
     "text": msg,
     "parse_mode": "Markdown"
     })
+
 

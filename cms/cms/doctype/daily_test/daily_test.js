@@ -8,7 +8,7 @@ frappe.ui.form.on("Daily Test", {
         }
     },
     onload(frm) {
-        
+        if (frappe.user.has_role("Mentee")){
 
         frappe.call({
             method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
@@ -34,6 +34,7 @@ frappe.ui.form.on("Daily Test", {
                 init_exam_timer(frm, session_start);
             }
         });
+    }
     }
 });
 let exam_interval = null;
@@ -80,7 +81,14 @@ function add_request_button(frm) {
                 fieldtype: "Datetime",
                 label: "Request Date Time",
                 reqd: 1
-            }],
+            },
+            {
+                fieldname: "reason",
+                fieldtype:"Data",
+                label:"Reason",
+                reqd:1
+            }
+        ],
             function (data) {
                 frappe.confirm(
                     `Extend exam time to ${data.request_time}?`,
@@ -90,7 +98,8 @@ function add_request_button(frm) {
                             args: {
                                 date: data.request_time,
                                 exam_id: frm.doc.name,
-                                mentee_id: frm.doc.mentee_id
+                                mentee_id: frm.doc.mentee_id,
+                                reason: data.reason
                             },
                             callback() {
                                 frappe.msgprint({

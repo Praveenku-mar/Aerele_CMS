@@ -1,0 +1,15 @@
+f"""
+New Test Available!
+Test: {doc.name}
+
+Complete it within the allowed window!
+Test Timing: {doc.exam_start_time} to {doc.exam_end_time}
+Duration: {doc.duration} minutes
+
+Open Test: {link}
+
+Instructions:
+• Auto-submit when time ends
+• Do not switch tabs repeatedly
+• Start only when you're ready
+"""

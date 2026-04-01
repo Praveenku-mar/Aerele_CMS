@@ -5,6 +5,10 @@ app_description = "Class Management System"
 app_email = "praveensekar223@gmail.com"
 app_license = "mit"
 
+
+override_doctype_class = {
+    "Notification": "cms.cms.override.telegram.Telegram"
+}
 # Apps
 # ------------------
 
