@@ -15,7 +15,6 @@ def ai_report_permission_query_condition(user):
 
 	if "CTO" in roles or "Administrator" in roles:
 		return ""
-
 	if "Mentor" in roles:
 		return f"""
 			`tabAI Report`.`mentee_id` IN (

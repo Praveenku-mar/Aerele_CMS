@@ -10,7 +10,8 @@
   "name1",
   "phone_number",
   "email",
-  "mentor_id"
+  "mentor_id",
+  "chat_id"
  ],
  "fields": [
   {
@@ -53,12 +54,18 @@
    "label": "Mentor ID",
    "options": "User",
    "reqd": 1
+  },
+  {
+   "fieldname": "chat_id",
+   "fieldtype": "Data",
+   "label": "Chat ID",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-26 13:06:30.329823",
+ "modified": "2026-04-01 11:12:45.370059",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Mentee",

@@ -15,6 +15,7 @@
   "exam_end_time",
   "is_submited",
   "mentee_email",
+  "chat_id",
   "question_section",
   "questions"
  ],
@@ -102,13 +103,21 @@
    "hidden": 1,
    "label": "Mentee Email",
    "options": "Email"
+  },
+  {
+   "fetch_from": "mentee_id.chat_id",
+   "fieldname": "chat_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Chat ID",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-31 13:46:36.833749",
+ "modified": "2026-04-01 11:13:55.186444",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",
