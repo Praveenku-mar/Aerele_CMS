@@ -6,4 +6,9 @@ from frappe.utils.nestedset import NestedSet
 
 
 class Concept(NestedSet):
-	pass
+	def autoname(self):
+		if self.concept and not self.question_id:
+			self.name = self.concept
+
+		if self.question_id and not self.concept:
+			self.name = self.question_id

@@ -18,10 +18,11 @@ def ai_report_permission_query_condition(user):
 	if "Mentor" in roles:
 		return f"""
 			`tabAI Report`.`mentee_id` IN (
-				SELECT name FROM `tabMentee`
-				WHERE mentor_id = '{user}'
-			)
-		"""
+				SELECT name
+				FROM `tabMentee`
+    	        WHERE mentor_id = '{user}'
+    	    )
+    	"""
 
 	if "Mentee" in roles:
 		mentee_id = frappe.db.get_value("Mentee", {"email": user}, "name")
