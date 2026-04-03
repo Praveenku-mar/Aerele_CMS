@@ -3,11 +3,17 @@
 
 import frappe
 from frappe.model.document import Document
-
+from frappe.utils import getdate
 
 class PerformanceReport(Document):
-	pass
-
+    def before_insert(self):
+        date_obj = getdate(self.date)
+        if self.type == "Weekly":
+            self.week = date_obj.isocalendar()[1]
+        if self.type == "Monthly":
+            self.month = date_obj.month
+        
+        self.year = date_obj.year
 
 
 def performance_report_permission_query_conditions(user):
