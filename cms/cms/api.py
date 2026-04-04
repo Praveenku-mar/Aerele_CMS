@@ -17,23 +17,11 @@ import re
 
 #     payload = {
 #         "model": "llama-3.1-8b-instant",
-#         "messages": [
-#             {
-#                 "role": "system",
-#                 "content": (
-#                     "You are an evaluator.\n"
-#                     "Respond ONLY with valid JSON.\n"
-#                     "Mandatory format:\n"
-#                     "{\"score\": number, \"feedback\": \"string\"}\n"
-#                     "Both keys must always exist. No markdown. No extra text."
-#                 )
-#             },
-#             {"role": "user", "content": prompt}
-#         ]
+#         "messages" : [{"role": "user", "content": prompt}]
 #     }
 
 #     res = requests.post(url, headers=headers, json=payload)
-
+#     print(res)
 #     if res.status_code != 200:
 #         frappe.throw(f"LLM API Error: {res.text}")
 
@@ -50,9 +38,20 @@ import re
 #         frappe.throw(f"Invalid JSON from AI:\n{text}")
 
 #     # Validate mandatory fields
-#     if "score" not in data or "feedback" not in data:
-#         frappe.throw(f"AI returned incomplete result: {data}")
+#     required = [
+#         "score_out_of_10",
+#         "ai_summary",
+#         "strong_areas",
+#         "weak_areas",
+#         "improvement_plan",
+#         "reasoning_for_score"
+#     ]
 
+#     missing = [k for k in required if k not in data]
+
+#     if missing:
+#         frappe.throw(f"AI returned incomplete result. Missing: {missing}")
+    
 #     return data
 
 
@@ -93,34 +92,85 @@ def log_logout(login_manager=None):
 
 
 def call_llm_api_daily(prompt: str):
-    url = "http://135.13.20.57:11434/api/generate"  
-    
+    import frappe, json, re
+    import requests
+
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    api_key = frappe.conf.get("groq_api_key")
+
+    if not api_key:
+        frappe.throw("Groq API key missing in site_config.json")
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}",
+    }
+
+    # --- STRICT SYSTEM MESSAGE ---
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You must output ONLY valid JSON. "
+                "No markdown, no text outside JSON, no headings, no comments."
+            )
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
 
     payload = {
-         "model": "qwen3:8b",
-         "prompt": prompt,
-         "stream": False
-        }
+        "model": "llama-3.1-8b-instant",
+        "messages": messages,
+        "temperature": 0  # ZERO hallucination
+    }
 
-    # ---- CALL OLLAMA ----
-    res = requests.post(url, json=payload)
+    # ------------------------------
+    # CALL MODEL
+    # ------------------------------
+    res = requests.post(url, headers=headers, json=payload)
+
     if res.status_code != 200:
         frappe.throw(f"LLM API Error: {res.text}")
-    raw = res.json().get("response", "").strip()
-    raw = raw.replace("```json", "").replace("```", "").strip()
-    # Extract JSON
-    match = re.search(r"\{.*\}", raw, flags=re.S)
-    if not match:
-        frappe.throw(f"AI returned no JSON:\n{raw}")
-    try:
-        result = json.loads(match.group(0))
-    except:
-        frappe.throw(f"Invalid JSON from AI:\n{raw}")
-    # Validate
-    if "score" not in result or "Feedback" not in result:
-        frappe.throw(f"AI returned incomplete result:\n{result}")
 
-    
+    text = res.json()["choices"][0]["message"]["content"].strip()
+
+    # ------------------------------
+    # CLEAN OUTPUT
+    # ------------------------------
+    # Remove fences
+    if text.startswith("```"):
+        text = text.replace("```json", "").replace("```", "").strip()
+
+    # Extract JSON if wrapped in text
+    match = re.search(r"\{.*\}", text, flags=re.S)
+    if not match:
+        frappe.throw(f"AI returned no valid JSON object:\n{text}")
+
+    json_str = match.group(0)
+
+    # ------------------------------
+    # PARSE JSON
+    # ------------------------------
+    try:
+        data = json.loads(json_str)
+    except Exception:
+        frappe.throw(f"AI returned malformed JSON:\n{json_str}")
+
+    required = [
+        "score_out_of_10",
+        "ai_summary",
+        "strong_areas",
+        "weak_areas",
+        "improvement_plan",
+        "reasoning_for_score"
+    ]
+
+    missing = [f for f in required if f not in data]
+    if missing:
+        frappe.throw(f"AI returned incomplete JSON. Missing fields: {missing}")
 
     return data
 
