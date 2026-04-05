@@ -55,9 +55,11 @@ class DailyTest(Document):
 
 @frappe.whitelist()
 def get_or_set_session_start(docname):
-	frappe.log_error("sssssssss",docname)
 	doc = frappe.get_doc("Daily Test", docname)
 	now = frappe.utils.now_datetime()
+
+	if doc.start == 0:
+		doc.start = 1
 
 	if now < doc.exam_start_time:
 		return {"status": "not_started"}

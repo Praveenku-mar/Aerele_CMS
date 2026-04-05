@@ -3,41 +3,38 @@
 
 frappe.ui.form.on("Daily Test", {
     refresh(frm){
+        let now = new Date();
         if (frappe.user.has_role("Mentee")) {
             add_request_button(frm);
             hide_questions(frm)
-            frm.add_custom_button(("Start Test"), ()=>{
-                show_questions(frm)
-                frappe.confirm("The exam is alive only 60 mins, after they exam is auto submit.",
-                    () =>{
-                        frappe.call({
-                            method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
-                            args: { docname: frm.doc.name },
-                            callback(r) {
-                                let res = r.message;
-                            
-                                setup_timer_box(frm);
-                            
-                                if (res.status === "not_started") {
-                                    hide_questions(frm);
-                                    show_msg("⏳ Exam not started");
-                                    return;
-                                }
-                            
-                                if (res.status === "ended") {
-                                    show_msg("🔴 Exam ended");
-                                    return;
-                                }
-                            
-                                show_questions(frm); 
-                                let session_start = new Date(res.session_start_time);
-                                init_exam_timer(frm, session_start);
-                                }
-                            });
+            if(frm.doc.start === 0 && frm.doc.exam_end_time > now)
+            {
+                frm.add_custom_button(("Start Test"), ()=>{
+                    show_questions(frm)
+                    frappe.confirm("The exam is alive only 60 mins, after they exam is auto submit.",
+                        () =>{
+                            frappe.call({
+                                method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
+                                args: { docname: frm.doc.name },
+                                callback(r) {
+                                    let res = r.message;
+                                    exam_timer(frm,res)
+                            }
+                        });
+                    })
+                })
+            }
+            else{
+                frappe.call({
+                    method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
+                    args: { docname: frm.doc.name },
+                    callback(r) {
+                        let res = r.message;
+                        exam_timer(frm,res)
+                    }
+                });
+            }
 
-                        }
-                )
-            })   
         }
     }
 });
@@ -118,6 +115,25 @@ function add_request_button(frm) {
             }
         );
     });
+}
+
+function exam_timer(frm,res){
+    setup_timer_box(frm);
+                            
+    if (res.status === "not_started") {
+        hide_questions(frm);
+        show_msg("⏳ Exam not started");
+        return;
+    }
+
+    if (res.status === "ended") {
+        show_msg("🔴 Exam ended");
+        return;
+    }
+
+    show_questions(frm); 
+    let session_start = new Date(res.session_start_time);
+    init_exam_timer(frm, session_start);
 }
 
 function setup_timer_box(frm) {
