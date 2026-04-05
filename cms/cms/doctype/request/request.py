@@ -25,7 +25,7 @@ class Request(Document):
 
 
 @frappe.whitelist()
-def request_time(date,exam_id,mentee_id):
+def request_time(date,exam_id,mentee_id,reason):
 
 	exists = frappe.db.exists("Request",{"exam_id":exam_id})
 	if exists:
@@ -34,7 +34,8 @@ def request_time(date,exam_id,mentee_id):
 		"doctype": "Request",
 		"mentee_id": mentee_id,
 		"exam_no": exam_id,
-		"request_end_time": date
+		"request_end_time": date,
+		"reason":reason
 	})
 
 	req.insert(ignore_permissions=True)

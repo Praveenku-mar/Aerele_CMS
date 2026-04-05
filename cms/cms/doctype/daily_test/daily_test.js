@@ -5,35 +5,40 @@ frappe.ui.form.on("Daily Test", {
     refresh(frm){
         if (frappe.user.has_role("Mentee")) {
             add_request_button(frm);
+            hide_questions(frm)
+            frm.add_custom_button(("Start Test"), ()=>{
+                show_questions(frm)
+                frappe.confirm("The exam is alive only 60 mins, after they exam is auto submit.",
+                    () =>{
+                        frappe.call({
+                            method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
+                            args: { docname: frm.doc.name },
+                            callback(r) {
+                                let res = r.message;
+                            
+                                setup_timer_box(frm);
+                            
+                                if (res.status === "not_started") {
+                                    hide_questions(frm);
+                                    show_msg("⏳ Exam not started");
+                                    return;
+                                }
+                            
+                                if (res.status === "ended") {
+                                    show_msg("🔴 Exam ended");
+                                    return;
+                                }
+                            
+                                show_questions(frm); 
+                                let session_start = new Date(res.session_start_time);
+                                init_exam_timer(frm, session_start);
+                                }
+                            });
+
+                        }
+                )
+            })   
         }
-    },
-    onload(frm) {
-        
-
-        frappe.call({
-            method: "cms.cms.doctype.daily_test.daily_test.get_or_set_session_start",
-            args: { docname: frm.doc.name },
-            callback(r) {
-                let res = r.message;
-
-                setup_timer_box(frm);
-
-                if (res.status === "not_started") {
-                    hide_questions(frm);
-                    show_msg("⏳ Exam not started");
-                    return;
-                }
-
-                if (res.status === "ended") {
-                    show_msg("🔴 Exam ended");
-                    return;
-                }
-
-                show_questions(frm); 
-                let session_start = new Date(res.session_start_time);
-                init_exam_timer(frm, session_start);
-            }
-        });
     }
 });
 let exam_interval = null;
@@ -80,7 +85,14 @@ function add_request_button(frm) {
                 fieldtype: "Datetime",
                 label: "Request Date Time",
                 reqd: 1
-            }],
+            },
+            {
+                fieldname: "reason",
+                fieldtype:"Data",
+                label:"Reason",
+                reqd:1
+            }
+        ],
             function (data) {
                 frappe.confirm(
                     `Extend exam time to ${data.request_time}?`,
@@ -90,7 +102,8 @@ function add_request_button(frm) {
                             args: {
                                 date: data.request_time,
                                 exam_id: frm.doc.name,
-                                mentee_id: frm.doc.mentee_id
+                                mentee_id: frm.doc.mentee_id,
+                                reason: data.reason
                             },
                             callback() {
                                 frappe.msgprint({

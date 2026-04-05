@@ -19,17 +19,27 @@ class AnswerScript(Document):
 
 
 	def copy_doc(self):
-		frappe.log_error("Copy",self.name)
-		mentee = frappe.get_all("Mentee",fields=["name"])
-		if not mentee:
+
+		mentees = frappe.get_all("Mentee", fields=["name"])
+		if not mentees:
 			return
+
 		src = frappe.get_doc("Answer Script", self.name)
-		for row in mentee:
+
+		for row in mentees:
 			new_doc = frappe.new_doc("Daily Test")
-			new_doc.mentee_id = row
+			new_doc.mentee_id = row["name"]
+
 			new_doc.exam_start_time = src.exam_start_time
 			new_doc.exam_end_time = src.exam_end_time
-			new_doc.questions = src.questions
+			for q in src.questions:
+				new_doc.append("questions", {
+					"question_id": q.question_id,
+					"question": q.question,
+					"correct_answer": q.correct_answer,
+					"ai_score": 0,
+					"mentor_score": 0
+				})
 			new_doc.insert()
 	
 	

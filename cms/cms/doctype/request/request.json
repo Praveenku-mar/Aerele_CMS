@@ -11,6 +11,7 @@
   "mentee_id",
   "exam_no",
   "request_end_time",
+  "reason",
   "status"
  ],
  "fields": [
@@ -52,13 +53,18 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Draft\nPending\nVerified\nApproved\nRejected"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 11:37:48.333028",
+ "modified": "2026-04-01 17:01:28.022121",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Request",

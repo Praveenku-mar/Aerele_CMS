@@ -3,57 +3,56 @@ import requests
 import json
 import re
 
-def call_llm_api(prompt: str):
-    url = "https://api.groq.com/openai/v1/chat/completions"
-    api_key = frappe.conf.get("groq_api_key")
+# def call_llm_api(prompt: str):
+#     url = "https://api.groq.com/openai/v1/chat/completions"
+#     api_key = frappe.conf.get("groq_api_key")
 
-    if not api_key:
-        frappe.throw("Groq API key missing in site_config.json")
+#     if not api_key:
+#         frappe.throw("Groq API key missing in site_config.json")
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}",
-    }
+#     headers = {
+#         "Content-Type": "application/json",
+#         "Authorization": f"Bearer {api_key}",
+#     }
 
-    payload = {
-        "model": "llama-3.1-8b-instant",
-        "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are an evaluator.\n"
-                    "Respond ONLY with valid JSON.\n"
-                    "Mandatory format:\n"
-                    "{\"score\": number, \"feedback\": \"string\"}\n"
-                    "Both keys must always exist. No markdown. No extra text."
-                )
-            },
-            {"role": "user", "content": prompt}
-        ]
-    }
+#     payload = {
+#         "model": "llama-3.1-8b-instant",
+#         "messages" : [{"role": "user", "content": prompt}]
+#     }
 
-    res = requests.post(url, headers=headers, json=payload)
+#     res = requests.post(url, headers=headers, json=payload)
+#     print(res)
+#     if res.status_code != 200:
+#         frappe.throw(f"LLM API Error: {res.text}")
 
-    if res.status_code != 200:
-        frappe.throw(f"LLM API Error: {res.text}")
+#     text = res.json()["choices"][0]["message"]["content"].strip()
 
-    text = res.json()["choices"][0]["message"]["content"].strip()
+#     # Remove accidental markdown fences
+#     if text.startswith("```"):
+#         text = text.replace("```json", "").replace("```", "").strip()
 
-    # Remove accidental markdown fences
-    if text.startswith("```"):
-        text = text.replace("```json", "").replace("```", "").strip()
+#     # Parse JSON
+#     try:
+#         data = json.loads(text)
+#     except Exception:
+#         frappe.throw(f"Invalid JSON from AI:\n{text}")
 
-    # Parse JSON
-    try:
-        data = json.loads(text)
-    except Exception:
-        frappe.throw(f"Invalid JSON from AI:\n{text}")
+#     # Validate mandatory fields
+#     required = [
+#         "score_out_of_10",
+#         "ai_summary",
+#         "strong_areas",
+#         "weak_areas",
+#         "improvement_plan",
+#         "reasoning_for_score"
+#     ]
 
-    # Validate mandatory fields
-    if "score" not in data or "feedback" not in data:
-        frappe.throw(f"AI returned incomplete result: {data}")
+#     missing = [k for k in required if k not in data]
 
-    return data
+#     if missing:
+#         frappe.throw(f"AI returned incomplete result. Missing: {missing}")
+    
+#     return data
 
 
 def create_audit_log(doc,method):
@@ -93,6 +92,9 @@ def log_logout(login_manager=None):
 
 
 def call_llm_api_daily(prompt: str):
+    import frappe, json, re
+    import requests
+
     url = "https://api.groq.com/openai/v1/chat/completions"
     api_key = frappe.conf.get("groq_api_key")
 
@@ -104,23 +106,30 @@ def call_llm_api_daily(prompt: str):
         "Authorization": f"Bearer {api_key}",
     }
 
+    # --- STRICT SYSTEM MESSAGE ---
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You must output ONLY valid JSON. "
+                "No markdown, no text outside JSON, no headings, no comments."
+            )
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+
     payload = {
         "model": "llama-3.1-8b-instant",
-        "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a daily performance evaluator.\n"
-                    "Respond ONLY with valid JSON.\n"
-                    "Required format:\n"
-                    "{\"summary\": \"string\", \"tasks_completed\": [\"string\"], \"strengths\": \"string\", \"weaknesses\": \"string\", \"improvements\": \"string\"}\n"
-                    "All keys are mandatory. No markdown. No extra text. Output must be valid JSON ONLY."
-                )
-            },
-            {"role": "user", "content": prompt}
-        ]
+        "messages": messages,
+        "temperature": 0  # ZERO hallucination
     }
 
+    # ------------------------------
+    # CALL MODEL
+    # ------------------------------
     res = requests.post(url, headers=headers, json=payload)
 
     if res.status_code != 200:
@@ -128,28 +137,46 @@ def call_llm_api_daily(prompt: str):
 
     text = res.json()["choices"][0]["message"]["content"].strip()
 
+    # ------------------------------
+    # CLEAN OUTPUT
+    # ------------------------------
+    # Remove fences
     if text.startswith("```"):
         text = text.replace("```json", "").replace("```", "").strip()
 
+    # Extract JSON if wrapped in text
+    match = re.search(r"\{.*\}", text, flags=re.S)
+    if not match:
+        frappe.throw(f"AI returned no valid JSON object:\n{text}")
+
+    json_str = match.group(0)
+
+    # ------------------------------
+    # PARSE JSON
+    # ------------------------------
     try:
-        data = json.loads(text)
-    except:
-        frappe.throw(f"Invalid JSON from AI:\n{text}")
+        data = json.loads(json_str)
+    except Exception:
+        frappe.throw(f"AI returned malformed JSON:\n{json_str}")
 
-    required_keys = ["summary", "strengths", "weaknesses", "improvements"]
+    required = [
+        "score_out_of_10",
+        "ai_summary",
+        "strong_areas",
+        "weak_areas",
+        "improvement_plan",
+        "reasoning_for_score"
+    ]
 
-    missing = [k for k in required_keys if k not in data]
+    missing = [f for f in required if f not in data]
     if missing:
-        frappe.throw(f"AI returned incomplete fields: {missing}\nFull Response: {data}")
+        frappe.throw(f"AI returned incomplete JSON. Missing fields: {missing}")
 
     return data
 
 
 
 def evaluate_with_ai(parent, data,mentee_id):
-    frappe.log_error("eval",parent)
-    frappe.log_error("data",data)
-
     url = "http://135.13.20.57:11434/api/generate"  
     question = []
     total = 0
@@ -343,18 +370,20 @@ def evaluate_with_ai(parent, data,mentee_id):
         if "score" not in result or "Feedback" not in result:
             frappe.throw(f"AI returned incomplete result:\n{result}")
 
-        score = result["score"]
+        score = result.get("score",0)
         feedback = result["Feedback"]
         total += int(score)
         question.append({"question_id":question_id,"ai_summary":feedback,"ai_score":score,"your_answer":item['mentee_answer']})
-    total = total / len(question)
+    final = total / len(question) 
     report = frappe.get_doc({
         'doctype':"AI Report",
         'mentee_id':mentee_id,
-        'exam_no':parent,
-        'total':total,
+        'exam_id':parent,
+        'total_score':total,
         'table_amwm':question
     }).insert(ignore_permissions=True)
+
+    return "OK"
     
 
 
@@ -364,6 +393,7 @@ def strip_html(text):
     return re.sub(r"<[^>]+>", "", text)
 
 def send_telegram(chat_id, msg):
+    frappe.log_error("send",chat_id)
     token = frappe.conf.telegram_bot_token
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     requests.post(url, json={
@@ -372,3 +402,50 @@ def send_telegram(chat_id, msg):
     "parse_mode": "Markdown"
     })
 
+@frappe.whitelist()
+def get_list():
+    user = frappe.session.user
+    roles = frappe.get_roles(user)
+
+    if "CTO" in roles and "Administrator" in roles:
+        mentee = frappe.get_all("Mentee", fields=["name", "name1"])
+
+    elif "Mentor" in roles:
+        mentee = frappe.get_all("Mentee",{"mentor_id":user},["name","name1"])
+
+    elif "Mentee" in roles:
+        mentee = frappe.db.get_value("Mentee", {"email": user}, ["name","name1"],as_dict=True)
+        frappe.log_error("mentee",mentee)
+            
+    return mentee
+
+
+@frappe.whitelist()
+def get_report(mentee, type, date=None, week=None, month=None):
+    filters = {"mentee_id": mentee, "type": type}
+    if date: filters["date"] = date
+    if week: filters["week"] = week
+    if month: filters["month"] = month
+
+    data = frappe.get_value("Performance Report", filters,
+        ["strong_area", "week_area", "improvement", "summary","name"],as_dict=True)
+    frappe.log_error("data",data)
+    return data
+
+@frappe.whitelist()
+def get_top_weekly():
+    data = frappe.db.sql("""
+        SELECT 
+            pr.mentee_id,
+            m.name1,
+            MAX(pr.ai_score) AS ai_score
+        FROM `tabPerformance Report` pr
+        JOIN `tabMentee` m ON pr.mentee_id = m.name
+        WHERE pr.type = 'Weekly'
+        GROUP BY pr.mentee_id, m.name1
+        ORDER BY ai_score DESC
+        LIMIT 5
+    """, as_dict=True)
+
+    frappe.log_error("get_top",data)
+    return data

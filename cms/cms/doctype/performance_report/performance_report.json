@@ -11,7 +11,12 @@
   "summary",
   "strong_area",
   "week_area",
-  "improvement"
+  "improvement",
+  "date",
+  "week",
+  "month",
+  "ai_score",
+  "why_i_gave_this_score"
  ],
  "fields": [
   {
@@ -29,8 +34,7 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Daily\nWeekly\nMonthly",
-   "read_only": 1
+   "options": "Daily\nWeekly\nMonthly"
   },
   {
    "fieldname": "improvement",
@@ -45,22 +49,47 @@
    "read_only": 1
   },
   {
-   "fieldname": "week_area",
-   "fieldtype": "Small Text",
-   "label": "Week Area",
-   "read_only": 1
-  },
-  {
    "fieldname": "summary",
    "fieldtype": "Small Text",
    "label": "Summary",
    "read_only": 1
+  },
+  {
+   "fieldname": "week_area",
+   "fieldtype": "Small Text",
+   "label": "Weak Area",
+   "read_only": 1
+  },
+  {
+   "fieldname": "week",
+   "fieldtype": "Int",
+   "label": "Week"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Int",
+   "label": "Month"
+  },
+  {
+   "fieldname": "ai_score",
+   "fieldtype": "Float",
+   "label": "AI Score"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "why_i_gave_this_score",
+   "fieldtype": "Small Text",
+   "label": "Why i gave this score"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-31 22:59:14.214873",
+ "modified": "2026-04-04 13:48:33.793361",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Performance Report",

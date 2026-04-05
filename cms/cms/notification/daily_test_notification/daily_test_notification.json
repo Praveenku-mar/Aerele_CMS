@@ -1,0 +1,29 @@
+{
+ "attach_files": "",
+ "attach_print": 0,
+ "channel": "Telegram",
+ "creation": "2026-04-01 13:41:36.426351",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Daily Test",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>\ud83c\udd95 <b>New Test Available!</b></p>\n<p><b>Test:</b> {{ doc.name }}</p>\n\n<p>\nComplete it within the allowed window!<br>\n<b>Test Timing:</b> {{ doc.start_time }} to {{ doc.end_time }}<br>\n<b>Duration:</b> {{ doc.duration }} minutes\n</p>\n\n<p>\n<a href=\"{{ link }}\" \n   style=\"background:#4A90E2;color:white;padding:10px 18px;\n          text-decoration:none;border-radius:6px;font-size:14px;\">\n   Open Test\n</a>\n</p>\n\n<p>\nInstructions:<br>\n\u2022 Auto-submit when time ends<br>\n\u2022 Do not switch tabs repeatedly<br>\n\u2022 Start only when you're ready\n</p>",
+ "message_type": "HTML",
+ "modified": "2026-04-01 17:55:59.183223",
+ "modified_by": "Administrator",
+ "module": "cms",
+ "name": "Daily Test Notification",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "owner",
+   "receiver_by_role": "Mentee"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0
+}

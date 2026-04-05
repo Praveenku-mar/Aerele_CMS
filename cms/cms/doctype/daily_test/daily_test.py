@@ -8,24 +8,6 @@ import re
 from cms.cms.api import strip_html,send_telegram
 
 class DailyTest(Document):
-	def after_insert(self):
-		message = f"""
-			**New Test Available!
-			Test: {self.name}
-
-			Complete it within the allowed window!
-			Test Timing: {self.exam_start_time} to {self.exam_end_time}
-			Duration: 60 minutes
-
-			Instructions:
-			• Auto-submit when time ends
-			• Do not switch tabs repeatedly
-			• Start only when you’re ready
-
-			All the best!**
-		"""
-		send_telegram(self.chat_id,message)
-
 
 	def before_submit(self):
 		if now_datetime() < get_datetime(self.exam_start_time):
@@ -36,7 +18,6 @@ class DailyTest(Document):
 
 	def on_submit(self):
 		self.validate_answer_with_ai()
-		self.calculate_total_mark()
 
 	def validate_all_answer(self):
 		missing = []
@@ -46,15 +27,6 @@ class DailyTest(Document):
 		msg = ", ".join(missing)
 		if missing:
 			frappe.throw(f"Your are not answer for these following question {msg}.")
-
-	def calculate_total_mark(self):
-		total_marks = 0
-		count = 0
-		for row in self.questions:
-			total_marks += row.ai_score or 0
-			count += 1
-
-		self.total_marks = total_marks / count
 
 
 	def validate_answer_with_ai(self):
