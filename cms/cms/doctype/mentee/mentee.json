@@ -23,8 +23,7 @@
    "fieldname": "mentee_id",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Mentee ID",
-   "reqd": 1
+   "label": "Mentee ID"
   },
   {
    "fieldname": "name1",
@@ -65,7 +64,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-03 18:10:11.885008",
+ "modified": "2026-04-05 21:28:47.912305",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Mentee",

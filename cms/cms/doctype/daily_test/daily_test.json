@@ -9,6 +9,7 @@
   "mentee_id",
   "amended_from",
   "session_start_time",
+  "start",
   "column_break_prxg",
   "exam_start_time",
   "exam_end_time",
@@ -102,13 +103,20 @@
    "hidden": 1,
    "label": "Chat ID",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "start",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "start"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-02 12:32:21.437374",
+ "modified": "2026-04-05 21:14:38.270307",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",
