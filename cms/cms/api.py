@@ -386,7 +386,6 @@ def evaluate_with_ai(parent, data,mentee_id):
     return "OK"
     
 
-
 def strip_html(text):
     if not text:
         return ""

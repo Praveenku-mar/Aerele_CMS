@@ -10,6 +10,7 @@
   "amended_from",
   "session_start_time",
   "start",
+  "route",
   "column_break_prxg",
   "exam_start_time",
   "exam_end_time",
@@ -110,13 +111,18 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "start"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
   }
  ],
  "grid_page_length": 50,
- "index_web_pages_for_search": 1,
+ "has_web_view": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-05 21:14:38.270307",
+ "modified": "2026-04-06 15:30:01.019240",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",
@@ -157,6 +163,7 @@
    "share": 1
   }
  ],
+ "route": "daily",
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
