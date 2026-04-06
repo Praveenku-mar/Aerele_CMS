@@ -19,7 +19,6 @@ class AnswerScript(Document):
 
 
 	def copy_doc(self):
-
 		mentees = frappe.get_all("Mentee", fields=["name"])
 		if not mentees:
 			return

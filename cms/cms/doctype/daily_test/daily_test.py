@@ -2,10 +2,10 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
 from frappe.utils import now_datetime, get_datetime
 import re
-from cms.cms.api import strip_html,send_telegram
+from cms.cms.api import strip_html
+from frappe.model.document import Document
 
 class DailyTest(Document):
 

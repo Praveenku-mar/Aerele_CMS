@@ -122,6 +122,8 @@ function exam_timer(frm,res){
                             
     if (res.status === "not_started") {
         hide_questions(frm);
+        frm.disable_save()
+        frm.disable_submit()
         show_msg("⏳ Exam not started");
         return;
     }

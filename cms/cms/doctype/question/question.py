@@ -11,7 +11,6 @@ class Question(Document):
 
 @frappe.whitelist()
 def get_mentor():
-# 	frappe.log_error("11111")
 	users = frappe.get_all("User", fields=["name"])
 	mentors = []
 
