@@ -119,10 +119,10 @@
   }
  ],
  "grid_page_length": 50,
- "has_web_view": 1,
+ "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-06 15:30:01.019240",
+ "modified": "2026-04-06 16:04:22.418570",
  "modified_by": "Administrator",
  "module": "cms",
  "name": "Daily Test",
@@ -163,7 +163,6 @@
    "share": 1
   }
  ],
- "route": "daily",
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",

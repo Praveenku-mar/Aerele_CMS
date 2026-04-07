@@ -5,9 +5,12 @@ frappe.ui.form.on("Daily Test", {
     refresh(frm){
         let now = new Date();
         if (frappe.user.has_role("Mentee")) {
-            add_request_button(frm);
+            if (frm.doc.start != 1){
+                add_request_button(frm);
+            }
             hide_questions(frm)
-            if(frm.doc.start === 0 && frm.doc.exam_end_time > now)
+            console.log("date",now)
+            if(frm.doc.start === 0)
             {
                 frm.add_custom_button(("Start Test"), ()=>{
                     show_questions(frm)
@@ -174,3 +177,11 @@ function ms_to_time(ms) {
     let s = Math.floor(ms / 1000);
     return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m ${s % 60}s`;
 }
+
+
+
+
+
+
+
+
