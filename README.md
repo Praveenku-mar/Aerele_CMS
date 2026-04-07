@@ -8,8 +8,8 @@ You can install this app using the [bench](https://github.com/frappe/bench) CLI:
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app cms
+bench get-app $URL_OF_THIS_REPO --branch version-15
+bench --site site-name install-app cms
 ```
 
 ### Contributing

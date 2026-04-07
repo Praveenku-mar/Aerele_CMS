@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from datetime import date
+from datetime import date,datetime
 import requests
 
 
@@ -52,6 +52,10 @@ class AnswerScript(Document):
 	def validate_time(self):
 		st = self.exam_start_time
 		ed = self.exam_end_time
+		# now = datetime.now()
+		# date_str = now.strftime("%Y-%m-%d %H:%M:%S")
+		# if now <= st:
+		# 	frappe.throw("Your only allowed to create today test.")
 		
 		if st >= ed:
 			frappe.throw("End time must be greater than start time")

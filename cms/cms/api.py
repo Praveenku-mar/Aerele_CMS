@@ -448,3 +448,32 @@ def get_top_weekly():
 
     frappe.log_error("get_top",data)
     return data
+
+
+
+def program():
+    dic = {"name":["praveen","dhinesh"],"age":[21,25,20],"phone_number":[1,2,3,4]}
+
+    out = [["praveen",21,1],["praveen",25,2],["praveen",20,3],["dhinesh",21,1],["dhinesh",25,2],["dhinesh",20,3] ]
+
+    ful_name = dic.get("name")
+    k = dic.get("age")
+    pn = dic.get("phone_number")
+    a_len = len(age)
+    p_len = len(pn)
+    f_len = a_len
+    
+    f_list = []
+
+    for name in ful_name:
+        for i in range(f_len):
+            temp = [name]
+            f_list.append(temp)
+    for i in range(f_len):
+        f_list[i].append(age[i])
+        f_list[i+f_len].append(age[i])
+        if i < p_len:
+            f_list[i].append(pn[i])
+            f_list[i+f_len].append(pn[i])
+        
+    print(f_list)
